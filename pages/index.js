@@ -8,7 +8,7 @@ class Lottery extends Component{
     super(props);
     this.state = {
       manager : '',
-      participate_amount : '0.5',
+      participate_amount : '0.01',
       message : '',
       total_amount : ''
     }
@@ -22,14 +22,32 @@ class Lottery extends Component{
     this.setState({total_amount : total_amount})
   }
 
+  onSubmit = async (event) => {
+    event.preventDefault();
+    const accounts = await web3.eth.getAccounts();
+    if(this.state.participate_amount < 0.01){
+      return alert("Amount is less than 0.01 pleas eneter a bigger amount");
+    }
+    this.setState({message : 'Please wait .....'});
+    const enter_lotery = await lottery.methods.enterLottery().send({
+      from : accounts[0],
+      value : web3.utils.toWei(this.state.participate_amount, 'ether')
+    });
+    this.setState({message: "You have been added to the lottery!"});
+  }
+
   render(){
     return (
        <div>
-          <h1> Total lottery pool is {this.state.total_amount} </h1>
-          <form>
-            <input placeholder="0.5" />
+          <h1> Total lottery pool is {web3.utils.fromWei(this.state.total_amount,'ether')} </h1>
+          <form onSubmit={this.onSubmit}>
+            <input value={this.state.participate_amount} onChange = {event => this.setState({
+              participate_amount : event.target.value
+              })}
+              />
             <button type="submit">Participate </button>
           </form>
+          <p> {this.state.message} </p>
           <hr /> <br /> <hr />
           <p> The manager of the lottery decentralized app is {this.state.manager}</p>
           <button> Pick Winner </button>
