@@ -24,12 +24,12 @@ contract Lottery{
         // select a random participant
         uint index = random() % participants.length;
         // transfer the contract balance to the participants
-        participants[index].transfer(this.balance);
+        participants[index].transfer(address(this).balance);
         // empty the address array
         participants = new address[](0);
     }
 
     function random() private view returns(uint256){
-        return uint(keccak256(block.difficulty, now, participants));
+        return uint(keccak256(abi.encodePacked(block.difficulty, now, participants)));
     }
 }
