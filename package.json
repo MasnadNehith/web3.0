@@ -10,7 +10,7 @@
   "author": "Masnad",
   "license": "ISC",
   "dependencies": {
-    "next": "^6.1.1",
+    "next": "^11.1.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "solc": "^0.4.24",
